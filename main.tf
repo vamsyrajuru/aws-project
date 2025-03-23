@@ -114,6 +114,14 @@ module "eks" {
   }
 }
 
+module "eks-fargate-profile" {
+  source  = "terraform-module/eks-fargate-profile/aws"
+  version = "2.2.10"
+  cluster_name = "rajuru"
+  namespaces = "default"
+  subnet_ids = var.eks_subnet_ids
+}
+
 ## The EKS cluster context is being set using null_resource
 ## Kubernetes Namespace is being created with name set to lastname
 ## The custom value is read from terraform.tfvars 
