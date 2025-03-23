@@ -88,8 +88,30 @@ module "eks" {
 */
 
 module "eks" {
-  source  = "terraform-aws-modules/eks/aws//examples/fargate"
-  version = "17.24.0"
+  source  = "terraform-aws-modules/eks/aws"
+  version = "~> 20.31"
+
+  cluster_name    = "rajuru"
+  cluster_version = "1.31"
+
+  # Optional
+  cluster_endpoint_public_access = true
+
+  # Optional: Adds the current caller identity as an administrator via cluster access entry
+  enable_cluster_creator_admin_permissions = true
+
+  cluster_compute_config = {
+    enabled    = true
+    node_pools = ["general-purpose"]
+  }
+
+  vpc_id     = var.vpc_id
+  subnet_ids = var.eks_subnet_ids
+
+  tags = {
+    Environment = "dev"
+    Terraform   = "true"
+  }
 }
 
 ## The EKS cluster context is being set using null_resource
