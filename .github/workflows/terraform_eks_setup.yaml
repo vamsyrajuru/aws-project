@@ -1,9 +1,7 @@
-name: EKS Cluster Creation using Terraform Templates
+name: EKS Cluster Creation
 
 on:
-  push:
-    branches:
-      - main 
+  workflow_dispatch:
 
 jobs:
   create-eks-cluster:

@@ -1,8 +1,9 @@
-name: EKS Cluster Creation using Terraform Templates
+name: Destroy EKS
 
 on:
   schedule:
     - cron: '0 23 * * *'
+  workflow_dispatch:
 
 jobs:
   destroy-eks-cluster:
