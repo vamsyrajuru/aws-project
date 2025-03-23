@@ -24,6 +24,13 @@ jobs:
       - name: Set up Terraform-CLI
         uses: hashicorp/setup-terraform@v2.0.2
 
+      - name: Terraform init and apply
+        run: |
+
+          echo "" RUNNING TERRAFORM INIT ""
+
+          terraform init
+
       - name: Terraform destroy
         run: |
 
