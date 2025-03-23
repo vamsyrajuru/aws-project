@@ -140,7 +140,7 @@ resource "null_resource" "update-kubeconfig-create-namespace" {
 ## Setting the below value after namespace is created. 
 ## Private with exception of this CIDR block - 196.182.32.48/32 
 ## The CIDR value is read from terraform.tfvars
-
+/*
 
 resource "null_resource" "update-publicAccessCidrs" {
   triggers = {
@@ -155,6 +155,6 @@ resource "null_resource" "update-publicAccessCidrs" {
     null_resource.update-kubeconfig-create-namespace
   ]
 }
-
+*/
 
 
