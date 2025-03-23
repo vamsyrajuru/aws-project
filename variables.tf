@@ -24,6 +24,18 @@ variable "eks_subnet_ids" {
   type        = list
 }
 
+variable "avail_a_public_subnet_id" {
+  type        = string
+}
+
+variable "igw_id" {
+  type        = string
+}
+
+variable "private_subnet_id" {
+  type        = string
+}
+
 variable "eks_control_plane_subnet_ids" {
   type        = list
 }

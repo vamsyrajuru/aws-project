@@ -87,6 +87,67 @@ module "eks" {
 }
 */
 
+# Allocate an Elastic IP for NAT Gateway
+resource "aws_eip" "nat_eip" {
+  domain = "vpc"
+
+  tags = {
+    Name = "NatEIP"
+  }
+}
+
+# Create a NAT Gateway in the Public Subnet
+resource "aws_nat_gateway" "nat_gw" {
+  allocation_id = aws_eip.nat_eip.id
+  subnet_id     = var.avail_a_public_subnet_id
+
+  tags = {
+    Name = "MyNATGateway"
+  }
+
+  depends_on = [aws_internet_gateway.igw]
+}
+
+# Create a Route Table for the Public Subnet
+resource "aws_route_table" "public_rt" {
+  vpc_id = var.vpc_id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = var.igw_id
+  }
+
+  tags = {
+    Name = "PublicRouteTable"
+  }
+}
+
+# Associate Public Subnet with Public Route Table
+resource "aws_route_table_association" "public_assoc" {
+  subnet_id      = var.avail_a_public_subnet_id
+  route_table_id = aws_route_table.public_rt.id
+}
+
+# Create a Route Table for the Private Subnet
+resource "aws_route_table" "private_rt" {
+  vpc_id = var.vpc_id
+
+  route {
+    cidr_block     = "0.0.0.0/0"
+    nat_gateway_id = aws_nat_gateway.nat_gw.id
+  }
+
+  tags = {
+    Name = "PrivateRouteTable"
+  }
+}
+
+# Associate Private Subnet with Private Route Table
+resource "aws_route_table_association" "private_assoc" {
+  subnet_id      = var.avail_a_public_subnet_id
+  route_table_id = aws_route_table.private_rt.id
+}
+
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "~> 20.31"
@@ -163,7 +224,7 @@ resource "aws_eks_fargate_profile" "rajuru_fargate" {
   cluster_name           = "rajuru"
   fargate_profile_name   = "rajuru_fargate"
   pod_execution_role_arn = aws_iam_role.rajuru_iam_role.arn
-  subnet_ids             = var.eks_subnet_ids
+  subnet_ids             = [var.private_subnet_id]
 
   selector {
     namespace = "rajuru"
