@@ -87,7 +87,7 @@ module "eks" {
 }
 */
 
-module "eks_example_fargate" {
+module "eks" {
   source  = "terraform-aws-modules/eks/aws//examples/fargate"
   version = "17.24.0"
 }
