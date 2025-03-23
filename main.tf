@@ -114,13 +114,7 @@ module "eks" {
   }
 }
 
-module "eks-fargate-profile" {
-  source  = "terraform-module/eks-fargate-profile/aws"
-  version = "2.2.10"
-  cluster_name = "rajuru"
-  namespaces = ["default"]
-  subnet_ids = var.eks_subnet_ids
-}
+
 
 ## The EKS cluster context is being set using null_resource
 ## Kubernetes Namespace is being created with name set to lastname
@@ -143,6 +137,37 @@ resource "null_resource" "update-kubeconfig-create-namespace" {
   depends_on = [
     module.eks  
   ]
+}
+
+resource "aws_iam_role" "rajuru_iam_role" {
+  name = "rajuru-fargate-profile-role"
+
+  assume_role_policy = jsonencode({
+    Statement = [{
+      Action = "sts:AssumeRole"
+      Effect = "Allow"
+      Principal = {
+        Service = "eks-fargate-pods.amazonaws.com"
+      }
+    }]
+    Version = "2012-10-17"
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "example-AmazonEKSFargatePodExecutionRolePolicy" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSFargatePodExecutionRolePolicy"
+  role       = aws_iam_role.rajuru_iam_role.name
+}
+
+resource "aws_eks_fargate_profile" "rajuru_fargate" {
+  cluster_name           = "rajuru"
+  fargate_profile_name   = "rajuru_fargate"
+  pod_execution_role_arn = aws_iam_role.rajuru_iam_role.arn
+  subnet_ids             = var.eks_subnet_ids
+
+  selector {
+    namespace = "rajuru"
+  }
 }
 
 ## Setting the below value after namespace is created. 
