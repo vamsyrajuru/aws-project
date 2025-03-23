@@ -6,7 +6,7 @@ module "vpc_id" {
 }
 */
 ## Module is called to launch the EKS cluster with specified requirements
-
+/*
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "~> 19.0"
@@ -84,6 +84,12 @@ module "eks" {
     OWNER = var.owner_tag
     CATEGORY   = var.category_tag
   }
+}
+*/
+
+module "eks_example_fargate" {
+  source  = "terraform-aws-modules/eks/aws//examples/fargate"
+  version = "17.24.0"
 }
 
 ## The EKS cluster context is being set using null_resource
