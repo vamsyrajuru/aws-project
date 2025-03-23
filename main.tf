@@ -140,6 +140,11 @@ resource "aws_route_table" "private_rt" {
   }
 }
 
+resource "time_sleep" "wait_30_seconds" {
+  depends_on = [aws_route_table.private_rt]
+  create_duration = "30s"
+}
+
 # Associate Private Subnet with Private Route Table
 resource "aws_route_table_association" "private_assoc" {
   subnet_id      = var.private_subnet_id
@@ -227,7 +232,7 @@ resource "aws_eks_fargate_profile" "rajuru_fargate" {
   selector {
     namespace = "rajuru"
   }
-  depends_on = [ module.eks ]
+  depends_on = [ module.eks, aws_route_table_association.private_assoc ]
 }
 
 ## Setting the below value after namespace is created. 
