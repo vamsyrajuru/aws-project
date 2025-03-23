@@ -1,13 +1,12 @@
 name: EKS Cluster Creation using Terraform Templates
 
 on:
-  push:
-    branches:
-      - main 
+  schedule:
+    - cron: '0 23 * * *'
 
 jobs:
-  create-eks-cluster:
-    name: Create EKS cluster using Terraform templates
+  destroy-eks-cluster:
+    name: Destroy EKS cluster using Terraform templates
     runs-on: ubuntu-latest
 
     steps:
@@ -24,23 +23,11 @@ jobs:
       - name: Set up Terraform-CLI
         uses: hashicorp/setup-terraform@v2.0.2
 
-      - name: Terraform init and apply
-        run: |
-
-          echo "" RUNNING TERRAFORM INIT ""
-
-          terraform init
-
-          terraform apply -auto-approve
-
       - name: Terraform destroy
         run: |
 
-          echo " ****  Sleeping for 2 minutes. Cancel the job if you don't want to destroy the stack ******"
-          
-                        
-          echo "ENABLE THIS STEP TO DESTROY"
+          echo "" RUNNING TERRAFORM destroy ""       
 
-          echo "" RUNNING TERRAFORM destroy ""          
+          terraform init   
 
           terraform destroy -auto-approve

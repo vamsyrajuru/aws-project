@@ -227,6 +227,7 @@ resource "aws_eks_fargate_profile" "rajuru_fargate" {
   selector {
     namespace = "rajuru"
   }
+  depends_on = [ module.eks ]
 }
 
 ## Setting the below value after namespace is created. 
