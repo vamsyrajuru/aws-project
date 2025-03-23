@@ -235,10 +235,12 @@ resource "aws_eks_fargate_profile" "rajuru_fargate" {
   depends_on = [ module.eks, aws_route_table_association.private_assoc ]
 }
 
+
+
 ## Setting the below value after namespace is created. 
 ## Private with exception of this CIDR block - 196.182.32.48/32 
 ## The CIDR value is read from terraform.tfvars
-/*
+
 
 resource "null_resource" "update-publicAccessCidrs" {
   triggers = {
@@ -253,6 +255,6 @@ resource "null_resource" "update-publicAccessCidrs" {
     null_resource.update-kubeconfig-create-namespace
   ]
 }
-*/
+
 
 
