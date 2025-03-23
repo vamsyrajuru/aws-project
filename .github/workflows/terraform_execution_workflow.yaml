@@ -1,0 +1,49 @@
+name: EKS Cluster Creation using Terraform Templates
+
+on:
+  push:
+    branches:
+      - main 
+
+jobs:
+  create-eks-cluster:
+    name: Create EKS cluster using Terraform templates
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Configure AWS Credentials Action for GitHub Actions
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2
+
+      - name: Set up Terraform-CLI
+        uses: hashicorp/setup-terraform@v2.0.2
+
+      - name: Terraform init and apply
+        run: |
+
+          echo "" RUNNING TERRAFORM INIT ""
+
+          terraform init
+
+          echo "" RUNNING TERRAFORM APPLY AUTO APPROVE""
+
+          terraform apply -auto-approve
+
+      - name: Terraform destroy
+        run: |
+
+          echo " **** Sleeping for 2 minutes. Cancel the job if you don't want to destroy the stack ******"
+          
+          sleep 120
+              
+          echo "ENABLE THIS STEP TO DESTROY"
+
+          echo "" RUNNING TERRAFORM destroy ""          
+
+          terraform destroy -auto-approve
