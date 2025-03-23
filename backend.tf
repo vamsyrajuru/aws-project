@@ -11,6 +11,6 @@ terraform {
     key                = "state/terraform.tfstate"
     region         	   = "us-east-1"
     encrypt        	   = true
-    dynamodb_table     = "aws_project_tf_lock"
+    use_lockfile       = true
   }
 }
