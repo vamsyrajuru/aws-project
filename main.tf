@@ -105,6 +105,7 @@ resource "aws_nat_gateway" "nat_gw" {
     Name = "MyNATGateway"
   }
 
+  depends_on = [aws_internet_gateway.igw]
 }
 
 # Create a Route Table for the Public Subnet
@@ -143,7 +144,7 @@ resource "aws_route_table" "private_rt" {
 
 # Associate Private Subnet with Private Route Table
 resource "aws_route_table_association" "private_assoc" {
-  subnet_id      = var.avail_a_public_subnet_id
+  subnet_id      = var.private_subnet_id
   route_table_id = aws_route_table.private_rt.id
 }
 
