@@ -38,6 +38,7 @@ jobs:
 
           echo " ****  Sleeping for 2 minutes. Cancel the job if you don't want to destroy the stack ******"
           
+          sleep 3600
               
           echo "ENABLE THIS STEP TO DESTROY"
 
