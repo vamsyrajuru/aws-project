@@ -71,9 +71,9 @@ module "eks" {
 
 ## Node group – max size 6, min size 3, desired size 4
 
-      min_size     = 3
-      max_size     = 6
-      desired_size = 4
+      min_size     = 1
+      max_size     = 2
+      desired_size = 1
 
       instance_types = var.eks_instance_types
       capacity_type  = "SPOT"
