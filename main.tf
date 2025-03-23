@@ -118,7 +118,7 @@ module "eks-fargate-profile" {
   source  = "terraform-module/eks-fargate-profile/aws"
   version = "2.2.10"
   cluster_name = "rajuru"
-  namespaces = "default"
+  namespaces = ["default"]
   subnet_ids = var.eks_subnet_ids
 }
 
