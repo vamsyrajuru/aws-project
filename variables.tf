@@ -1,17 +1,16 @@
 variable "aws_region" {
   description = "The region where the infrastructure should be deployed to"
   type        = string
-  default     = "us-west-2"
+  default     = "us-east-1"
 }
 
 variable "accountid" {
   type        = string
 }
-/*
+
 variable "vpc_id" {
   type        = string
 }
-*/
 
 variable "eks_cluster_name" {
   type        = string

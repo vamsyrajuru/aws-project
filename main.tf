@@ -1,17 +1,17 @@
 ## Module is called to read the vpc id value
-
+/*
 module "vpc_id" {
   source  = "./vpc_id"
   aws_region = var.aws_region
 }
-
+*/
 ## Module is called to launch the EKS cluster with specified requirements
 
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "~> 19.0"
 
-  vpc_id                   = module.vpc_id.vpc_id
+  vpc_id                   = var.vpc_id
   subnet_ids               = var.eks_subnet_ids
   control_plane_subnet_ids = var.eks_control_plane_subnet_ids
 
