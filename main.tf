@@ -198,6 +198,18 @@ resource "null_resource" "update-kubeconfig-create-namespace" {
     command     = "kubectl get namespace ${var.lastname_namespace}"
   }
 
+  provisioner "local-exec" {
+    command     = "curl -O https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.12.0/docs/install/iam_policy.json"
+  }
+
+  provisioner "local-exec" {
+    command     = "aws iam create-policy --policy-name AWSLoadBalancerControllerIAMPolicy --policy-document file://iam_policy.json"
+  }
+
+  provisioner "local-exec" {
+    command     = "eksctl create iamserviceaccount --cluster=rajuru --namespace=rajuru --name=aws-load-balancer-controller --attach-policy-arn=arn:aws:iam::066399359930:policy/AWSLoadBalancerControllerIAMPolicy --override-existing-serviceaccounts --region us-east-1 --approve"
+  }
+
   depends_on = [
     module.eks  
   ]
@@ -237,24 +249,25 @@ resource "aws_eks_fargate_profile" "rajuru_fargate" {
 
 
 
-## Setting the below value after namespace is created. 
-## Private with exception of this CIDR block - 196.182.32.48/32 
-## The CIDR value is read from terraform.tfvars
-/*
+resource "helm_release" "aws-loadbalancer" {
+  name       = "aws-loadbalancer-controller"
+  repository = "https://aws.github.io/eks-charts"
+  chart      = "aws-load-balancer-controller"
+  namespace = "rajuru"
 
-resource "null_resource" "update-publicAccessCidrs" {
-  triggers = {
-    always_run = "${timestamp()}"
+  set {
+    name  = "clusterName"
+    value = "rajuru"
   }
-
-  provisioner "local-exec" {
-    command     = "aws eks update-cluster-config --region ${var.aws_region} --name ${var.eks_cluster_name} --resources-vpc-config publicAccessCidrs=${var.eks_cluster_endpoint_public_access_cidrs}"
+  set {
+    name  = "serviceAccount.create"
+    value = "false"
   }
-  depends_on = [
-    module.eks,
-    null_resource.update-kubeconfig-create-namespace
-  ]
+  set {
+    name  = "serviceAccount.name"
+    value = "aws-load-balancer-controller"
+  }
+  depends_on = [ aws_eks_fargate_profile.rajuru_fargate ]
 }
-*/
 
 
