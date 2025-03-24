@@ -28,6 +28,10 @@ jobs:
           sudo mv /tmp/eksctl /usr/local/bin
           eksctl version  # Verify installation
 
+      - name: Update Kubeconfig for EKS
+        run: aws eks update-kubeconfig --region us-east-1 --name rajuru
+        continue-on-error: true
+
       - name: Terraform init and apply
         run: |
 
