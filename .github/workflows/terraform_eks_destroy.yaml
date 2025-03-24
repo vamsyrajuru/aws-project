@@ -21,6 +21,10 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
+      - name: Update Kubeconfig for EKS
+        run: aws eks update-kubeconfig --region us-east-1 --name rajuru
+        continue-on-error: true
+
       - name: Set up Terraform-CLI
         uses: hashicorp/setup-terraform@v2.0.2
 
