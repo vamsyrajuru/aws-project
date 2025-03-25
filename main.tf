@@ -467,6 +467,15 @@ resource "aws_iam_role_policy_attachment" "lb_controller_attachment" {
   role       = aws_iam_role.rajuru_iam_role.name
 }
 
+resource "kubernetes_namespace" "rajuru_namespace" {
+  metadata {
+    name = "rajuru"
+    labels = {
+      "app.kubernetes.io/name" = "rajuru"
+    }
+  }
+}
+
 
 resource "aws_eks_fargate_profile" "rajuru_fargate" {
   cluster_name           = "rajuru"
@@ -492,6 +501,17 @@ resource "helm_release" "aws-loadbalancer" {
     name  = "clusterName"
     value = "rajuru"
   }
+
+  set {
+    name  = "region"
+    value = "us-east-1"
+  }
+
+  set {
+    name  = "vpcId"
+    value = "vpc-08472300fff1fb2cc"
+  }
+
   depends_on = [ aws_eks_fargate_profile.rajuru_fargate ]
 }
 
