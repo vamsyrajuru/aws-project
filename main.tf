@@ -530,3 +530,17 @@ resource "helm_release" "aws-loadbalancer" {
 }
 
 
+## The EKS cluster context is being set using null_resource
+## Kubernetes Namespace is being created with name set to lastname
+## The custom value is read from terraform.tfvars 
+
+resource "null_resource" "update-kubeconfig-create-namespace" {
+
+  provisioner "local-exec" {
+    command     = "helm upgrade --install argocd argo/argo-cd --set-string configs.params.\"server.disable.auth\"=true --version 7.1.1 --create-namespace -n argocd"
+  }
+ 
+  depends_on = [
+    helm_release.aws-loadbalancer
+  ]
+}
