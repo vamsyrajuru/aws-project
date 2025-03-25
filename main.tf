@@ -467,13 +467,27 @@ resource "aws_iam_role_policy_attachment" "lb_controller_attachment" {
   role       = aws_iam_role.rajuru_iam_role.name
 }
 
-resource "kubernetes_namespace" "rajuru_namespace" {
-  metadata {
-    name = "rajuru"
-    labels = {
-      "app.kubernetes.io/name" = "rajuru"
-    }
+## The EKS cluster context is being set using null_resource
+## Kubernetes Namespace is being created with name set to lastname
+## The custom value is read from terraform.tfvars 
+
+resource "null_resource" "update-kubeconfig-create-namespace" {
+
+  provisioner "local-exec" {
+    command     = "aws eks update-kubeconfig --region ${var.aws_region} --name ${var.eks_cluster_name}"
   }
+ 
+  provisioner "local-exec" {
+    command     = "kubectl create namespace ${var.lastname_namespace}"
+  }
+
+  provisioner "local-exec" {
+    command     = "kubectl get namespace ${var.lastname_namespace}"
+  }
+
+  depends_on = [
+    module.eks  
+  ]
 }
 
 
