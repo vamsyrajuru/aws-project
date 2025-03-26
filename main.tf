@@ -537,6 +537,14 @@ resource "helm_release" "aws-loadbalancer" {
 resource "null_resource" "argocd-install" {
 
   provisioner "local-exec" {
+    command     = "helm repo add argo https://argoproj.github.io/argo-helm"
+  }
+
+  provisioner "local-exec" {
+    command     = "helm repo update"
+  }
+
+  provisioner "local-exec" {
     command     = "helm upgrade --install argocd argo/argo-cd --set-string configs.params.\"server.disable.auth\"=true --version 7.1.1 --create-namespace -n argocd"
   }
  
