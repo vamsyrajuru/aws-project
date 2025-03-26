@@ -547,6 +547,10 @@ resource "null_resource" "argocd-install" {
   provisioner "local-exec" {
     command     = "helm upgrade --install argocd argo/argo-cd --set-string configs.params.\"server.disable.auth\"=true --version 7.1.1 --create-namespace -n argocd"
   }
+
+  provisioner "local-exec" {
+    command     = "kubectl apply -f resources/service.yaml"
+  }
  
   depends_on = [
     helm_release.aws-loadbalancer
