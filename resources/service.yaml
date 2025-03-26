@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/name: argocd-server
     app.kubernetes.io/part-of: argocd
     app.kubernetes.io/component: server
-  name: argocd-server
+  name: argocd-server-nodeport
   namespace: argocd
 spec:
   ports:
